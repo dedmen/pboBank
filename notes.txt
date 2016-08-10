@@ -1,0 +1,25 @@
+﻿
+ .
+　　　､ヾ'"'';　　　　　　　　　　/ゝ
+　　　ﾐ 　彡 　　　wWw ＿／´　 ｀ヽ　
+　　　ミ 　彡　 ､ヾ　　　ヾ/ 　　　　　,!　Σ
+.　　　ﾐ 　ミ　 ミ 　　　　 ゝ 　 o,　 oミ 　　
+　　　 ミ　ミ　ミ　 　 　 　 　`ミ __,xノﾞ､　　　　　　　　
+　　　　ﾐ　 ﾐ ﾐ　 　　　ﾐ　　　　　ヽ.._,,))) 　　　　　　　　　　
+　　　　ヾ､　 ! 　 　 　 ﾐ　　i　　　　　　　　　　　 　　　　　　　　
+　　　　　´"'｀､　　　　 ミ　ヽ.　　　　､ゞヾ'""''ｿ;μ,　　　　
+.　　　　　　　　｀ ｰｰ -‐''ゝ､,,))　　ヾ　 ,' 3　　　　彡　　　ﾌﾞﾜｯ
+　　　　　　　　　　　　　　　　　　　ﾐ　　　　　　　　ミ
+　　　 　　　　　　　　　　　　　　　 彡　　　　　　　 ﾐ
+　　　　　　　　　　　　　　　　　　　 /ｿ,,　,　,; ,;;:､ヾ`
+
+Each file belongs to a mod
+Each Mod is unique by name and version
+each different Mod version has its own Mod entry
+
+Client chooses Mod by combination of Name+Version
+
+
+
+#TODO files should have subpath variable starting from @Folder which will be addons/ for almost every file
+where there are special variables for custom paths which start with % like in the old updater

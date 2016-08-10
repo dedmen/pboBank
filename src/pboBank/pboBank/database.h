@@ -17,7 +17,7 @@ namespace pboBank {
 		database();
 
 		~database();
-		bool connect();
+		bool connect() const;
 
 		std::vector<boost::shared_ptr<changeSet>> getChangeSets();
 		std::vector<boost::shared_ptr<file>> getFiles(std::vector<boost::shared_ptr<pboBank::changeSet>> changeSetsInit, std::vector<boost::shared_ptr<pboBank::mod>> modsInit);

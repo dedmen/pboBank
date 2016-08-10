@@ -87,7 +87,7 @@ void pboBank::fileManager::indexDirectory(std::string directoryPath, boost::shar
 	}
 }
 
-void pboBank::fileManager::copyFileToBank(boost::shared_ptr<file> pFile, std::string originPath) {
+void pboBank::fileManager::copyFileToBank(boost::shared_ptr<file> pFile, std::string originPath) const {
 	printf("Copying %s to bank\n", pFile->getFilename().c_str());
 	if (!boost::filesystem::create_directories(getServerPathFromMD5(pFile->md5sum))) {
 		//printf("ERROR couldnt make path %s\n", getServerPathFromMD5(pFile->md5sum).c_str());//This also happens when path already exists.. 
@@ -133,7 +133,7 @@ void pboBank::fileManager::dropFileLinks(std::vector<boost::shared_ptr<file>> pF
 struct bin2hex_str {
 	std::ostream& os;
 	bin2hex_str(std::ostream& os) : os(os) {}
-	void operator ()(unsigned char ch) {
+	void operator ()(unsigned char ch) const {
 		os << std::hex
 			<< std::setw(2)
 			<< static_cast<int>(ch);
@@ -203,7 +203,7 @@ void pboBank::fileManager::compressFileInBank(boost::shared_ptr<file> pFile) con
 	os.push(boost::iostreams::zlib_compressor{ boost::iostreams::zlib::best_speed,4096});
 	os.push(inStream);
 
-	auto x = boost::iostreams::copy(os, outStream, 4096);
+	/*auto x = */boost::iostreams::copy(os, outStream);
 	//printf("%lld \n", x);
 	os.pop();
 	inStream.close();
@@ -220,7 +220,7 @@ void pboBank::fileManager::uncompressFileInBank(boost::shared_ptr<file> pFile) c
 
 	os.push(boost::iostreams::zlib_decompressor{});
 	os.push(inStream);
-	auto x = boost::iostreams::copy(os, outStream, 4096);
+	/*auto x = */boost::iostreams::copy(os, outStream);
 	//printf("%lld \n", x);
 	os.pop();
 	inStream.close();

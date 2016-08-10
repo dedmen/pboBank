@@ -1,14 +1,10 @@
 # pragma once
 
-#include <algorithm>  // count.
 #include <boost/iostreams/categories.hpp>
-#include <boost/iostreams/char_traits.hpp>
-#include <boost/iostreams/operations.hpp>
 #include <boost/iostreams/pipeline.hpp>
-#include <boost/asio/streambuf.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/iostreams/filter/aggregate.hpp>
-#include <boost/iostreams/filter/symmetric.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
 namespace pboBank {
 		//
 		// Template name: basic_counter.

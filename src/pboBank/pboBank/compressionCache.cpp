@@ -1,34 +1,33 @@
 #include "compressionCache.h"
 #include <boost/make_shared.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include "fileServer.h"
-#include <boost/iostreams/stream.hpp>
 #include "streamFilter_CopyToBuf.h"
 //#define useCache
-pboBank::compressionCache::compressionCache() {}
-  /*
-  	Problems with caching
-	the basic_refKeeper iterates and copies the whole buffer which is unnecessary and wastes a lot of cpu time and memory allocations
-	pboBank::copyToBuf waits till the whole stream is compressed before outputting data thats because its not a symmetric_filter
-  
-  	even in disabled state refKeeper does copy and iterate the buffer
-  
-  	Best solution:
-	 create a Source/Sink for each file.. pass the source to the fileServer which calls boost::iostreams::read (As seen in the refKeeper code)
-  	 And pass the Sink to a thread which compresses and pushes into the sink
-  	 http://www.boost.org/doc/libs/1_46_0/libs/iostreams/doc/concepts/source.html
-	 http://www.boost.org/doc/libs/1_46_0/libs/iostreams/doc/concepts/sink.html
+pboBank::compressionCache::compressionCache(): cacheSize(0) {}
+
+/*
+	Problems with caching
+  the basic_refKeeper iterates and copies the whole buffer which is unnecessary and wastes a lot of cpu time and memory allocations
+  pboBank::copyToBuf waits till the whole stream is compressed before outputting data thats because its not a symmetric_filter
+
+	even in disabled state refKeeper does copy and iterate the buffer
+
+	Best solution:
+ create a Source/Sink for each file.. pass the source to the fileServer which calls boost::iostreams::read (As seen in the refKeeper code)
+	 And pass the Sink to a thread which compresses and pushes into the sink
+	 http://www.boost.org/doc/libs/1_46_0/libs/iostreams/doc/concepts/source.html
+ http://www.boost.org/doc/libs/1_46_0/libs/iostreams/doc/concepts/sink.html
 
 
 
-  Currently the refKeeper iterating every char is capping speed to about 9MB/s max and about 5MB/s average
-  Thats why im completly avoiding the compressionCache in the fileServer... for now
-  */
+Currently the refKeeper iterating every char is capping speed to about 9MB/s max and about 5MB/s average
+Thats why im completly avoiding the compressionCache in the fileServer... for now
+*/
 
 pboBank::compressionCache::~compressionCache() {}
 
-boost::shared_ptr<boost::iostreams::filtering_istream> pboBank::compressionCache::getCompressedFileBuffer(boost::shared_ptr<file> pFile) {
+boost::shared_ptr<boost::iostreams::filtering_istream> pboBank::compressionCache::getCompressedFileBuffer(boost::shared_ptr<file> pFile) const {
 	auto stream = boost::make_shared<boost::iostreams::filtering_istream>();
 #ifdef useCache
 	std::map<boost::shared_ptr<file>, boost::shared_ptr<cacheInfo>>::iterator found;

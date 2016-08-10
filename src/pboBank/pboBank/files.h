@@ -1,12 +1,8 @@
 #pragma once
-#include <string>
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
-#include <map>
 #include <boost/date_time/posix_time/ptime.hpp>
-#include <boost/flyweight.hpp>
-#include <boost/flyweight/no_tracking.hpp>
 #include <boost/container/string.hpp>
 class change;
 namespace pboBank {

@@ -14,7 +14,7 @@ pboBank::database::database() {
 
 pboBank::database::~database() {}
 
-bool pboBank::database::connect() {
+bool pboBank::database::connect() const {
 
 	if (mysql_real_connect(pMysqlCon, "bravo.dedmen.de", "pboBank", "pboBank", "pboBank", 0, nullptr, CLIENT_MULTI_RESULTS | CLIENT_COMPRESS) == nullptr) {
 		printf("db connection failed %s\n", mysql_error(pMysqlCon));
@@ -43,7 +43,7 @@ std::vector<boost::shared_ptr<pboBank::changeSet>> pboBank::database::getChangeS
 
 	MYSQL_RES *result = mysql_store_result(pMysqlCon);
 
-	if (result == NULL) {
+	if (result == nullptr) {
 		return std::vector<boost::shared_ptr<changeSet>>();
 	}
 
@@ -85,7 +85,7 @@ std::vector<boost::shared_ptr<pboBank::changeSet>> pboBank::database::getChangeS
 
 	result = mysql_store_result(pMysqlCon);
 
-	if (result == NULL) {
+	if (result == nullptr) {
 		return std::vector<boost::shared_ptr<changeSet>>();
 	}
 

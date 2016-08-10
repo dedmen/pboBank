@@ -1,9 +1,8 @@
 #pragma once
-#include <string>
 #include <vector>
 #include <boost/asio/io_service.hpp>
 namespace pboBank
-{
+{								   
 	class fileManager;
 	class database;
 	class modManager;
@@ -22,7 +21,7 @@ public:
 	pboBank::compressionCache* getCompressionCache() const { return pCompressionCache; }
 	void init();
 	void run();//gets called from main thread
-	void signal(int signum);
+	void signal(int signum) const;
 private:
 	boost::asio::io_service mainIOservice;
 	pboBank::fileManager* pFileManager;
@@ -44,7 +43,7 @@ class globalHelper {
 
 		for (unsigned int i = 0; i < hex.length(); i += 2) {
 			std::string byteString = hex.substr(i, 2);
-			char byte = (char) strtol(byteString.c_str(), NULL, 16);
+			char byte = static_cast<char>(strtol(byteString.c_str(), nullptr, 16));
 			bytes.emplace_back(byte);
 		}
 

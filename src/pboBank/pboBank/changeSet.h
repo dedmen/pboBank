@@ -1,7 +1,5 @@
 #pragma once
-#include <string>
 #include <vector>
-#include <boost/shared_ptr.hpp>
 #include <boost/date_time.hpp>
 namespace pboBank {
 
@@ -17,7 +15,7 @@ namespace pboBank {
 	class change {
 
 	public:
-		change(boost::shared_ptr<changeSet> pChangeSet, changeType type, std::string filePath) : pChangeSet(pChangeSet), type(type), filePath(filePath) {}
+		change(boost::shared_ptr<changeSet> pChangeSet, changeType type, std::string filePath) : index(0), pChangeSet(pChangeSet), type(type), filePath(filePath) {}
 		boost::shared_ptr<changeSet> getChangeSet() const { return pChangeSet; }
 		changeType getChangeType() const { return type; }
 		std::string getFilePath() const { return filePath; }

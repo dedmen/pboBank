@@ -128,6 +128,6 @@ void global::run() {
 
 }
 
-void global::signal(int signum) {
+void global::signal(int signum) const {
 	printf("signal %d", signum);   //2 is ctrl+C SIGTERM
 }

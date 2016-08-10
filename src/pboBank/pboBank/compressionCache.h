@@ -1,5 +1,4 @@
 #pragma once
-#include <boost/asio/streambuf.hpp>
 #include <map>
 #include <boost/container/static_vector.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
@@ -21,7 +20,7 @@ namespace pboBank {
 
 
 
-		boost::shared_ptr<boost::iostreams::filtering_istream>  getCompressedFileBuffer(boost::shared_ptr<file> pFile);
+		boost::shared_ptr<boost::iostreams::filtering_istream>  getCompressedFileBuffer(boost::shared_ptr<file> pFile) const;
 		std::map<boost::shared_ptr<file>, boost::shared_ptr<cacheInfo>> cachedFiles;
 		uint64_t cacheSize;
 

@@ -1,12 +1,11 @@
 #pragma once
-#include <string>
 #include "files.h"
 namespace pboBank {
 
 
 	class modManager {
 	public:
-		modManager(std::vector<boost::shared_ptr<mod>> modsInit);
+		explicit modManager(std::vector<boost::shared_ptr<mod>> modsInit);
 		~modManager();
 		boost::shared_ptr<mod> findModByNameAndVersion(std::string name,std::string version);
 
