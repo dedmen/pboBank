@@ -8,7 +8,11 @@
 global GLOBAL;
 
 global::global() {
+#ifdef _WIN32_WINNT
 	fileBankBasePath = "T:/bank/";
+#else
+	fileBankBasePath = "bank/";
+#endif
 }
 //#Filetransfer http://stackoverflow.com/questions/6486745/c-lzma-compression-and-decompression-of-large-stream-by-parts
 
@@ -81,10 +85,18 @@ void global::init() {
 	//	printf("%d\n", i);
 	//}
 
+	
+#ifdef _WIN32_WINNT
 	pModManager->indexMod("test", "test",
 		"test", "1");
-
 	pFileManager->indexFile("F:/Steam/SteamApps/common/Arma 3/@GF_Vehicles/addons/gr_medium_utility_helicopters.pbo", pModManager->findModByNameAndVersion("test", "1"));
+#else
+	pModManager->indexMod("linuxtext", "test",
+		"test", "1");
+	pFileManager->indexFile("/home/wolf/server/gr_medium_utility_helicopters.pbo", pModManager->findModByNameAndVersion("linuxtext", "1"));
+#endif
+	
+	
 
 
 

@@ -10,6 +10,10 @@ namespace pboBank
 	class compressionCache;
 }
 
+constexpr unsigned long long int operator"" _megaByte(unsigned long long int mb) {
+	return mb * 1024 * 1024;
+}
+
 class global {
 public:
 	global();
