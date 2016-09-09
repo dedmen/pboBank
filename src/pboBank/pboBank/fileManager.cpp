@@ -7,6 +7,8 @@
 #include "global.h"
 #include <openssl/md5.h>
 #include "database.h"
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
 pboBank::fileManager::fileManager(std::vector<boost::shared_ptr<file>> filesInit) : files(filesInit) {
 	for (auto &it : files) {
 		filesByMD5[it->md5sum] = it;
@@ -20,8 +22,8 @@ std::vector<std::string> pboBank::fileManager::findUnknownFiles() const {
 	std::vector<std::string> unknownFiles;
 
 	boost::filesystem::path fileBankBase(GLOBAL.getFileBankBasePath());
-
-	for (auto &iterator : boost::filesystem::recursive_directory_iterator(fileBankBase)) {
+	
+	for (auto &iterator : boost::make_iterator_range(boost::filesystem::recursive_directory_iterator(fileBankBase), {})) {
 
 		if (boost::filesystem::is_regular_file(iterator.status())) {
 			boost::multiprecision::uint128_t md5sum = getMD5fromServerPath(iterator.path().string());
@@ -79,7 +81,8 @@ void pboBank::fileManager::indexDirectory(std::string directoryPath, boost::shar
 		printf("ERROR cant index directory because it doesnt exist: %s\n", directoryPath.c_str());
 		return;
 	}
-	for (auto &iterator : boost::filesystem::recursive_directory_iterator(directoryPath)) {
+	
+	for (auto &iterator : boost::make_iterator_range(boost::filesystem::recursive_directory_iterator(directoryPath), {})) {
 
 		if (boost::filesystem::is_regular_file(iterator.status())) {
 			indexFile(iterator.path().generic_string(), pMod);

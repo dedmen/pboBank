@@ -70,6 +70,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -134,11 +135,12 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>J:\Installs\development\c++\openssl-1.0.2e-vs2015\include64;J:\Installs\development\c++\boost_1_61_0_x64;J:\Installs\development\c++\pboBank\deps\mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>J:\Installs\development\c++\openssl-1.0.2e-vs2015\lib64;J:\Installs\development\c++\pboBank\deps;J:\Installs\development\c++\boost_1_61_0_x64static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>J:\Installs\development\c++\openssl-1.0.2e-vs2015\lib64;J:\Installs\development\c++\pboBank\deps;J:\Installs\development\c++\boost_1_61_0_x64\lib64-msvc-14.0;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>mariadbclient.lib;libeay32MT.lib;ssleay32MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
