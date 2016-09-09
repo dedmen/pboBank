@@ -8,3 +8,7 @@
 /src/pboBank/x64/Release
 /src/pboBank/pboBank.sdf
 /src/pboBank/pboBank.VC.opendb
+/src/pboBank/pboBank_LinuxBuild/bin/x64
+/src/pboBank/pboBank_LinuxBuild/obj/x64
+/src/pboBank/pboBank_LinuxBuild/readme/images
+/src/pboBank/pboBank_LinuxBuild/readme

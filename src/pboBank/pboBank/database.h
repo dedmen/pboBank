@@ -1,5 +1,9 @@
 #pragma once
+#ifdef _WIN32_WINNT
 #include <mysql.h>
+#else
+#include <mysql/mysql.h>
+#endif
 #include <vector>
 #include "changeSet.h"
 #include "files.h"
