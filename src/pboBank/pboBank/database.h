@@ -24,8 +24,9 @@ namespace pboBank {
 		bool connect() const;
 
 		std::vector<boost::shared_ptr<changeSet>> getChangeSets();
-		std::vector<boost::shared_ptr<file>> getFiles(std::vector<boost::shared_ptr<pboBank::changeSet>> changeSetsInit, std::vector<boost::shared_ptr<pboBank::mod>> modsInit);
+		std::vector<boost::shared_ptr<file>> getFiles(std::vector<boost::shared_ptr<pboBank::changeSet>> changeSetsInit, std::vector<boost::shared_ptr<pboBank::mod>> modsInit, std::vector<boost::shared_ptr<modpack>> modpacksInit);
 		std::vector<boost::shared_ptr<mod>> getMods() const;
+		std::vector<boost::shared_ptr<modpack>> getModpacks() const;
 		std::vector<trunkData> getTrunk();
 		bool insertMod(boost::shared_ptr<mod>) const;  //returns success
 		bool insertFile(boost::shared_ptr<file> pFile, boost::shared_ptr<pboBank::mod> pMod) const;

@@ -27,8 +27,10 @@ void global::init() {
 	std::sort(modsInit.begin(), modsInit.end(), pboBank::mod::isLessThan);
 	printf("getting ChangeSets from DB\n");
 	auto changeSetsInit = pDatabase->getChangeSets();
+	printf("getting ChangeSets from DB\n");
+	auto modpacksInit = pDatabase->getModpacks();
 	printf("getting Files from DB\n");
-	auto filesInit = pDatabase->getFiles(changeSetsInit, modsInit);
+	auto filesInit = pDatabase->getFiles(changeSetsInit, modsInit, modpacksInit);
 	printf("Loaded %llu files, %llu mods and %llu changesets\n", filesInit.size(), modsInit.size(), changeSetsInit.size());
 	pFileManager = new pboBank::fileManager(filesInit);
 	pModManager = new pboBank::modManager(modsInit);

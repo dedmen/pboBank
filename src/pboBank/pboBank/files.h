@@ -47,5 +47,16 @@ namespace pboBank {
 		}
 	};
 
+	class modpack {
+	public:
+		uint32_t index; //index in database
+		std::string name;	  //#TODO convert to boost::container::string after adding getters/setters
+		std::string folder;
+		std::string description;
+		std::vector<boost::shared_ptr<mod>> mods;//mods of this pack
+	};
+
+
+
 }
 

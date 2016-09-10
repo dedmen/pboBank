@@ -61,6 +61,7 @@ void pboBank::compressionCache::threadCompressionTakeover(boost::shared_ptr<comp
 	printf("thread takeover \n");
 
 	boost::thread t([pCompressor, maxSpeedPerSec]() {
+		//#TODO use http://www.boost.org/doc/libs/1_61_0/libs/timer/doc/cpu_timers.html
 		boost::shared_ptr<compressedFileCompressing> refKeeper = pCompressor; //not sure if this is necessary
 		std::vector<char> buf;
 		buf.resize(1024 * 1024);

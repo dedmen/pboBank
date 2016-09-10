@@ -19,6 +19,10 @@ on Linux
 */
 #define fileServerMultiThread
 namespace pboBank {
+	enum class fileServerState {
+		sendingFile,
+		commandMode
+	};
 	class fileServerClient
 		: public boost::enable_shared_from_this<fileServerClient> {
 	public:
@@ -29,117 +33,59 @@ namespace pboBank {
 		boost::asio::ip::tcp::socket& socket() {
 			return socket_;
 		}
-
+		void testTransfer();
 		void start() {
 
-			//This will be called outside of mainthread!
 
-			printf("startTransfer \n");
-
-#ifdef _WIN32_WINNT
-			auto pfile = GLOBAL.getModManager()->findModByNameAndVersion("test", "1")->files;
-#else
-			auto pfile = GLOBAL.getModManager()->findModByNameAndVersion("linuxtext", "1")->files;
-#endif
-
-			//auto pfile = GLOBAL.getFileManager()->getFiles();
-
-			auto getFileByName = [&](std::string name) ->boost::shared_ptr<file> {
-				for (auto& it : pfile) {
-					if (it->getFilename().compare(name) == 0)
-						return it;
-				}
-				return nullptr;
-			};
+			socket_.set_option(boost::asio::ip::tcp::no_delay(true));
+			socket_.async_read_some(boost::asio::buffer(readBuf.data(), readBuf.size()),
+				boost::bind(&fileServerClient::handle_read, shared_from_this(),
+					boost::asio::placeholders::error,
+					boost::asio::placeholders::bytes_transferred));
+			isReading = true;
 
 
 
 
-			auto pFile = getFileByName("gr_medium_utility_helicopters.pbo");
-			//auto pFile = getFileByName("mcc_sandbox_mod.pbo");
-			m_sourceFile = GLOBAL.getCompressionCache()->getCompressedFileBuffer(pFile);
-			printf("input %u\n", pFile->fileSize);
-			transferstart = boost::posix_time::microsec_clock::local_time();
 
-			/*
-			2MB buffer
-			93MB/s	 on 9 connections
-			10MB buffer
-			101MB/s
-			4MB buffer
-			104MB/s
-			1MB buffer
-			102MB/s
 
-			*/
-			sendFile();
+
+
+
+
+			
 		}
-		void sendFile() {
-#ifdef fileServerMultiThread
-			while
-#else
-			if
-#endif
-
-				(m_sourceFile && m_sourceFile->valid() && !m_sourceFile->eof()) {
-				auto dataRead = m_sourceFile->read(m_buf.data(), m_buf.size());
-				if (m_sourceFile->fail() && !m_sourceFile->eof()) {
-					//auto msg = "Failed while reading file";
-					//BOOST_LOG_TRIVIAL(error) << msg;
-					//throw std::fstream::failure(msg);
-					printf("CRITICAL sendFile error\n");
-					return;
-				}
-
-				auto buf = boost::asio::buffer(m_buf.data(), static_cast<size_t>(dataRead));
-				auto xthis = this->shared_from_this();
-#ifdef fileServerMultiThread
-				boost::system::error_code ec;
-				xthis->counter += boost::asio::write(socket_, buf, ec);
-				if (ec) {
-					auto compressor = boost::dynamic_pointer_cast<compressedFileCompressing>(m_sourceFile);
-					if (!compressor || !compressor->isCaching())
-						break;
-					GLOBAL.getCompressionCache()->threadCompressionTakeover(compressor, 7_megaByte);  //continue compressing file to cache
-					break;
-				}
-#else
-				boost::asio::async_write(socket_,
-					buf,
-					[xthis](boost::system::error_code ec, size_t length) {
-					xthis->counter += length;
-					xthis->sendFile();
-				});
-				return;
-#endif
-			}
-			boost::posix_time::ptime t2(boost::posix_time::microsec_clock::local_time());
-			boost::posix_time::time_duration diff = t2 - transferstart;
-			printf("transmission done %llu in %lld with %llu KB/s\n", counter, diff.total_milliseconds(), ((counter / std::max(static_cast<int64_t>(1), diff.total_milliseconds())) * 1000) / 1024);
-
-			//file done
-
-
-
-
-
-
-		}
+		void sendFile();
 
 		explicit fileServerClient(boost::asio::io_service& io_service)
-			: m_sourceFile(nullptr), socket_(io_service), counter(0) {}
+			: state(fileServerState::commandMode), m_sourceFile(nullptr), socket_(io_service), counter(0), isReading(false){}
 	private:
 
 
-		void handle_write(const boost::system::error_code& /*error*/,
-			size_t /*bytes_transferred*/) {}
-
+		void handle_write(const boost::system::error_code& /*error*/, size_t /*bytes_transferred*/);
+		void handle_read(const boost::system::error_code& /*error*/, size_t /*bytes_transferred*/);
+		fileServerState state;
 		boost::posix_time::ptime transferstart;
 		boost::shared_ptr<compressedFileBase> m_sourceFile; //this really doesnt need to be a ptr... but its easy to switch to compressionCache that way
+
+															/*
+															2MB buffer
+															93MB/s	 on 9 connections
+															10MB buffer
+															101MB/s
+															4MB buffer
+															104MB/s
+															1MB buffer
+															102MB/s
+
+															*/
+
 		std::array<char, (1024 * 1024) * 1> m_buf;	  //keeping this at 1MB or lower for now.. because thats capable of pushing 100MB/s though we only need max 12
+		std::array<char, (1024) * 8> readBuf;
 		boost::asio::ip::tcp::socket socket_;
 		std::string message_;
 		uint64_t counter;
+		bool isReading;
 	};
 
 	class fileServer {
@@ -164,7 +110,8 @@ namespace pboBank {
 #ifdef fileServerMultiThread
 				boost::thread t([new_connection]() {
 					new_connection->start();
-					printf("conn END\n"); });
+					printf("conn END\n");
+			});
 #else
 				new_connection->start();
 #endif
@@ -174,12 +121,12 @@ namespace pboBank {
 
 
 
-			}
-
-			start_accept();
 		}
 
+			start_accept();
+	}
+
 		boost::asio::ip::tcp::acceptor acceptor_;
-	};
+};
 
 }

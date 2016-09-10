@@ -102,7 +102,7 @@ std::vector<boost::shared_ptr<pboBank::changeSet>> pboBank::database::getChangeS
 	return changeSets;
 }
 
-std::vector<boost::shared_ptr<pboBank::file>> pboBank::database::getFiles(std::vector<boost::shared_ptr<pboBank::changeSet>> changeSetsInit, std::vector<boost::shared_ptr<pboBank::mod>> modsInit) {
+std::vector<boost::shared_ptr<pboBank::file>> pboBank::database::getFiles(std::vector<boost::shared_ptr<pboBank::changeSet>> changeSetsInit, std::vector<boost::shared_ptr<pboBank::mod>> modsInit, std::vector<boost::shared_ptr<modpack>> modpacksInit) {
 	std::vector<boost::shared_ptr<pboBank::file>> files;
 
 	if (mysql_query(pMysqlCon,
@@ -128,6 +128,14 @@ std::vector<boost::shared_ptr<pboBank::file>> pboBank::database::getFiles(std::v
 				return it;
 		}
 		printf("ERROR mod with index %d not found\n", index);
+		return nullptr;
+	};
+	auto getModpackByIndex = [&](uint32_t index) -> boost::shared_ptr<pboBank::modpack> {
+		for (auto &it : modpacksInit) {
+			if (it->index == index)
+				return it;
+		}
+		printf("ERROR modpack with index %d not found\n", index);
 		return nullptr;
 	};
 	auto getChangeByIndex = [&](uint32_t index) -> boost::shared_ptr<pboBank::change> {
@@ -192,6 +200,32 @@ std::vector<boost::shared_ptr<pboBank::file>> pboBank::database::getFiles(std::v
 
 	}
 	mysql_free_result(result);
+
+
+
+	if (mysql_query(pMysqlCon,
+		"SELECT\n"
+		"	modpacks_mods.modpackIndex,\n"
+		"	modpacks_mods.modIndex\n"
+		"FROM\n"
+		"	modpacks_mods"
+	)) {
+		return std::vector<boost::shared_ptr<pboBank::file>>();  //returns empty vector
+	}
+
+
+
+	result = mysql_store_result(pMysqlCon);
+	if (!result)
+		return std::vector<boost::shared_ptr<pboBank::file>>();  //returns empty vector
+
+	while ((row = mysql_fetch_row(result))) {
+		auto modpack = getModpackByIndex(boost::lexical_cast<uint32_t>(row[0]));
+		auto mod = getModByIndex(boost::lexical_cast<uint32_t>(row[1]));
+		modpack->mods.push_back(mod); //#TODO add "add" function
+	}
+	mysql_free_result(result);
+
 	return files;
 }
 
@@ -235,6 +269,42 @@ std::vector<boost::shared_ptr<pboBank::mod>> pboBank::database::getMods() const 
 	}
 	mysql_free_result(result);
 	return mods;
+}
+
+std::vector<boost::shared_ptr<pboBank::modpack>> pboBank::database::getModpacks() const {
+	std::vector<boost::shared_ptr<pboBank::modpack>> modpacks;
+
+	if (mysql_query(pMysqlCon,
+		"SELECT\n"
+		"	`modpacks`.`index` AS `index`,\n"
+		"	`modpacks`.`name` AS `name`,\n"
+		"	`modpacks`.`folderName` AS `folderName`,\n"
+		"	`modpacks`.`description` AS `description`\n"
+		"FROM\n"
+		"	`modpacks`"
+	)) {
+		return modpacks;  //returns empty vector
+	}
+
+	MYSQL_RES *result = mysql_store_result(pMysqlCon);
+	if (!result)
+		return modpacks;  //returns empty vector
+
+	MYSQL_ROW row;
+	while ((row = mysql_fetch_row(result))) {
+		uint32_t modIndex = boost::lexical_cast<uint32_t>(row[0]);
+		std::string modpackName = row[1];
+		std::string modpackFolder = row[2];
+		std::string modpackDescription = row[3];
+		auto modPtr = boost::make_shared<modpack>();
+		modPtr->index = modIndex;
+		modPtr->name = modpackName;
+		modPtr->folder = modpackFolder;
+		modPtr->description = modpackDescription;
+		modpacks.emplace_back(modPtr);
+	}
+	mysql_free_result(result);
+	return modpacks;
 }
 
 bool pboBank::database::insertMod(boost::shared_ptr<mod> pMod) const {
