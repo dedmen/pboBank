@@ -97,6 +97,7 @@ namespace pboBank {
 		virtual ~compressedFileCompressing() {
 			if (pCachedFile)
 				pCachedFile->used();
+			//#TODO investigate big allocation before this
 			printf("~compressedFileCompressing speed %llu mics %llu bytes %f MB/s\n", timeSpent, bytesCompressed,
 				static_cast<double>(bytesCompressed) / 1024 / 1024 //MB
 				/

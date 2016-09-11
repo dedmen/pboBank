@@ -51,6 +51,11 @@ void pboBank::fileServerClient::sendFile() {
 }
 
 void pboBank::fileServerClient::handle_write(const boost::system::error_code& error, size_t bytes_transferred) {
+	 if (error) {
+		 
+	 }
+
+
 		switch (state)
 		{
 			case fileServerState::sendingFile:
@@ -67,6 +72,7 @@ void pboBank::fileServerClient::handle_read(const boost::system::error_code& err
 	if (error)
 		return;
 	BOOST_SCOPE_EXIT_ALL(&) {
+		printf("reading again\n");
 		socket_.async_read_some(boost::asio::buffer(readBuf.data(), readBuf.size()),
 			boost::bind(&fileServerClient::handle_read, shared_from_this(),
 				boost::asio::placeholders::error,
@@ -120,35 +126,41 @@ void pboBank::fileServerClient::handle_read(const boost::system::error_code& err
 void pboBank::fileServerClient::testTransfer() {
 	//This will be called outside of mainthread!
 
-	printf("startTransfer \n");
-
-#ifdef _WIN32_WINNT
-	auto pfile = GLOBAL.getModManager()->findModByNameAndVersion("test", "1")->files;
-#else
-	auto pfile = GLOBAL.getModManager()->findModByNameAndVersion("linuxtext", "1")->files;
-#endif
-
-	//auto pfile = GLOBAL.getFileManager()->getFiles();
-
-	auto getFileByName = [&](std::string name) ->boost::shared_ptr<file> {
-		for (auto& it : pfile) {
-			if (it->getFilename().compare(name) == 0)
-				return it;
-		}
-		return nullptr;
-	};
-
-
-
-
-	auto pFile = getFileByName("gr_medium_utility_helicopters.pbo");
-	//auto pFile = getFileByName("mcc_sandbox_mod.pbo");
-	m_sourceFile = GLOBAL.getCompressionCache()->getCompressedFileBuffer(pFile);
-	printf("input %u\n", pFile->fileSize);
-	transferstart = boost::posix_time::microsec_clock::local_time();
 
 #ifdef fileServerMultiThread
-	boost::thread t([this]() {
+	auto xref = shared_from_this();
+	boost::thread t([this, xref]() {
+		auto refkeep2 = xref;
+		printf("startTransfer \n");
+
+#ifdef _WIN32_WINNT
+		auto pfile = GLOBAL.getModManager()->findModByNameAndVersion("test", "1")->files;
+#else
+		auto pfile = GLOBAL.getModManager()->findModByNameAndVersion("linuxtext", "1")->files;
+#endif
+
+		//auto pfile = GLOBAL.getFileManager()->getFiles();
+
+		auto getFileByName = [&](std::string name) ->boost::shared_ptr<file> {
+			for (auto& it : pfile) {
+				if (it->getFilename().compare(name) == 0)
+					return it;
+			}
+			return nullptr;
+		};
+
+
+
+
+		auto pFile = getFileByName("gr_medium_utility_helicopters.pbo");
+		//auto pFile = getFileByName("mcc_sandbox_mod.pbo");
+		m_sourceFile = GLOBAL.getCompressionCache()->getCompressedFileBuffer(pFile);
+		printf("input %u\n", pFile->fileSize);
+		transferstart = boost::posix_time::microsec_clock::local_time();
+		//file done
+
+
+
 		sendFile();
 		printf("transfer END\n"); });
 #else

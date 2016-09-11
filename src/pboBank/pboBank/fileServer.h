@@ -35,25 +35,12 @@ namespace pboBank {
 		}
 		void testTransfer();
 		void start() {
-
-
 			socket_.set_option(boost::asio::ip::tcp::no_delay(true));
 			socket_.async_read_some(boost::asio::buffer(readBuf.data(), readBuf.size()),
 				boost::bind(&fileServerClient::handle_read, shared_from_this(),
 					boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred));
-			isReading = true;
-
-
-
-
-
-
-
-
-
-
-			
+			isReading = true;			
 		}
 		void sendFile();
 
