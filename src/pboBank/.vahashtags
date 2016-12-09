@@ -1,3 +1,4 @@
 
 f:..\..\..\boost_1_61_0_x64\boost\multi_index_container.hpp
 f:..\..\..\boost_1_61_0_x64\boost\integer_fwd.hpp
+d:..\..\..\boost_1_61_0_x64\boost\smart_ptr\detail\

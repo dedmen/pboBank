@@ -5,6 +5,7 @@
 #include "fileServer.h"
 #include "compressionCache.h"
 #include <boost/thread.hpp>
+#include "a3sync.h"
 global GLOBAL;
 
 global::global() {
@@ -89,9 +90,8 @@ void global::init() {
 
 	
 #ifdef _WIN32_WINNT
-	pModManager->indexMod("test", "test",
-		"test", "1");
-	pFileManager->indexFile("F:/Steam/SteamApps/common/Arma 3/@GF_Vehicles/addons/gr_medium_utility_helicopters.pbo", pModManager->findModByNameAndVersion("test", "1"));
+	//pModManager->indexMod("test", "test", "test", "1");
+	//pFileManager->indexFile("F:/Steam/SteamApps/common/Arma 3/@GF_Vehicles/addons/gr_medium_utility_helicopters.pbo", pModManager->findModByNameAndVersion("test", "1"));
 #else
 	pModManager->indexMod("linuxtext", "test",
 		"test", "1");
@@ -114,6 +114,10 @@ void global::init() {
 	boost::posix_time::time_duration diffunc = t1 - t0;
 	printf("uncompress %lld", diffunc.total_milliseconds());
 	printf("compress %lld", diff.total_milliseconds());
+
+    javaSerializer::testSync();
+
+
 
 }
 

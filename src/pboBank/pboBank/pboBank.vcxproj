@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="a3sync.h" />
     <ClInclude Include="changeSet.h" />
+    <ClInclude Include="cluster.h" />
     <ClInclude Include="compressionCache.h" />
     <ClInclude Include="database.h" />
     <ClInclude Include="fileManager.h" />
@@ -30,6 +32,8 @@
     <ClInclude Include="streamFilter_CopyToBuf.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="a3sync.cpp" />
+    <ClCompile Include="cluster.cpp" />
     <ClCompile Include="compressionCache.cpp" />
     <ClCompile Include="database.cpp" />
     <ClCompile Include="fileManager.cpp" />
@@ -105,7 +109,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>J:\Installs\development\c++\openssl-1.0.2e-vs2015\include64;J:\Installs\development\c++\boost_1_61_0_x64;J:\Installs\development\c++\pboBank\deps\mysql;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_MBCS;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;_MBCS;_WIN32_WINNT=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>J:\Installs\development\c++\openssl-1.0.2e-vs2015\lib64;J:\Installs\development\c++\pboBank\deps;J:\Installs\development\c++\boost_1_61_0_x64static\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

@@ -42,6 +42,12 @@
     <ClInclude Include="streamFilter_CopyToBuf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cluster.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="a3sync.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="files.cpp">
@@ -66,6 +72,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="compressionCache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cluster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="a3sync.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
